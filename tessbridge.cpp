@@ -19,21 +19,25 @@ void Free(TessBaseAPI a) {
   delete api;
 }
 
-void Init(TessBaseAPI a, char* tessdataprefix, char* languages) {
+int Init(TessBaseAPI a, char* tessdataprefix, char* languages) {
   tesseract::TessBaseAPI * api = (tesseract::TessBaseAPI*)a;
-  api->Init(tessdataprefix, languages);
+  return api->Init(tessdataprefix, languages);
 }
 
-void InitConfig(TessBaseAPI a, char* tessdataprefix, char* languages, char* config) {
-  char *configs[]={config};
-  int configs_size = 1;
+int Init(TessBaseAPI a, char* tessdataprefix, char* languages, char* configfilepath) {
   tesseract::TessBaseAPI * api = (tesseract::TessBaseAPI*)a;
-  api->Init(tessdataprefix, languages, tesseract::OEM_DEFAULT, configs, configs_size, NULL, NULL, false);
+  if (configfilepath != NULL) {
+    char *configs[]={configfilepath};
+    int configs_size = 1;
+    return api->Init(tessdataprefix, languages, tesseract::OEM_DEFAULT, configs, configs_size, NULL, NULL, false);
+  } else {
+    return api->Init(tessdataprefix, languages);
+  }
 }
 
-void SetVariable(TessBaseAPI a, char* name, char* value) {
+bool SetVariable(TessBaseAPI a, char* name, char* value) {
   tesseract::TessBaseAPI * api = (tesseract::TessBaseAPI*)a;
-  api->SetVariable(name, value);
+  return api->SetVariable(name, value);
 }
 
 void SetImage(TessBaseAPI a, char* imagepath) {
